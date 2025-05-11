@@ -16,7 +16,7 @@ const anthropic = new Anthropic();
 const app = express();
 app.use(express.json())
 
-
+//template
 app.post("/template", async (req, res) => {
     const prompt = req.body.prompt;
 
@@ -29,7 +29,7 @@ app.post("/template", async (req, res) => {
 
       const answer = (response.content[0] as TextBlock).text; // react or node
 
-      if(answer  == "react"){
+      if(answer  === "react"){
         res.json({
             prompts: [BASE_PROMPT, `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n - .gitignore\n - package-lock.json\n`],
             uiPrompts:[reactBasePrompt]
@@ -37,9 +37,9 @@ app.post("/template", async (req, res) => {
         return;
     }
 
-    if(answer == "node"){
+    if(answer === "node"){
         res.json({
-            prompts: [nodeBasePrompt],
+            prompts: [`Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${nodeBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n - .gitignore\n - package-lock.json\n`],
             uiPrompts:[nodeBasePrompt]
         })
         return;
@@ -48,6 +48,25 @@ app.post("/template", async (req, res) => {
         return;
     
 })
+
+//chat
+app.post("/chat", async (req,res) =>{
+    const messages = req.body.messages;
+
+       const response = await anthropic.messages.create({
+          messages: messages,
+          model: 'claude-3-7-sonnet-20250219',
+          max_tokens: 200,
+          system: getSystemPrompt()
+      })
+
+      console.log(response);
+
+      res.json({});
+})
+
+
+
 
 //streaming
 // async function main() {
@@ -65,5 +84,6 @@ app.post("/template", async (req, res) => {
 // main();
 
 
-app.listen(3000);
- 
+app.listen(3000, ()=>{
+    console.log("server is running at port 3000.")
+});
