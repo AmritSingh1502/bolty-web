@@ -8,7 +8,7 @@ import { basePrompt as nodeBasePrompt } from "./defaults/node";
 import { basePrompt as reactBasePrompt } from "./defaults/react";
 
 
-const CLAUDE_API = process.env.CLAUDE_API_KEY;
+const CLAUDE_API = process.env.ANTHROPIC_API_KEY;
 
 
 // by default it use ANTHROPIC_API_KEY
